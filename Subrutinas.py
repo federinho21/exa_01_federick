@@ -16,33 +16,34 @@ baraja = [["1B", "2B", "3B", "4B", "5B", "6B", "7B", "8B", "9B", "10B", "JB", "Q
 def validar_expresion(expresion):
     pila = cls_Stack()
     if not pila.isempty():
-        raise ValueError("La pila debe estar vacía antes de utilizarse.")
+        raise ValueError("la pila debe estar vacia antes de utilizarse.")
 
     parejas = {")": "(", "]": "[", "}": "{"}
-    es_valida = True
+    cierres = {"(": ")", "[": "]", "{": "}"}
+    error = ""
 
-    for caracter in expresion:
-        if caracter in "([{":
+    for posicion, caracter in enumerate(expresion, start=1):
+        if caracter in cierres:
             pila.push(caracter)
         elif caracter in parejas:
-            if pila.isempty() or pila.pop() != parejas[caracter]:
-                es_valida = False
+            if pila.isempty():
+                error = f"cierre '{caracter}' sin apertura en la posicion {posicion}."
+                break
+            apertura = pila.pop()
+            if apertura != parejas[caracter]:
+                error = f"se esperaba '{cierres[apertura]}' pero se encontro '{caracter}' en la posicion {posicion}."
                 break
 
+    if not error and not pila.isempty():
+        error = f"falta cerrar '{pila.peek()}' con '{cierres[pila.peek()]}'."
 
-    # Los psrentesis pedientes indican que faltaron cierres
-    if not pila.isempty():
-        es_valida = False
-
-
-    # se deja la pila vacia incluso cuando la expresion sea incorreta
+    # limpio la pila incluso si encontre un error.
     while not pila.isempty():
         pila.pop()
-
     if not pila.isempty():
-        raise ValueError("La pila debe estar vacía al finalizar su uso.")
+        raise ValueError("la pila debe estar vacia al finalizar su uso.")
 
-    return es_valida
+    return not error, error
 
 
 def repartir_cartas(jugadores):
