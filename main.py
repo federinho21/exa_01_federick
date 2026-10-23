@@ -10,6 +10,7 @@ Professor....: Jorge Ruiz (york)
 Student......:
 ================================================================================================="""
 from Subrutinas import validar_expresion
+from cls_Jugador import cls_Jugador
 
 expresion = input("Ingrese una expresión matemática: ")
 
@@ -17,4 +18,12 @@ if validar_expresion(expresion):
     print("La expresión está bien escrita en cuanto al uso de agrupadores.")
 else:
     print("La expresión está mal escrita en cuanto al uso de agrupadores.")
+
+# cada jugador crea su propia pila desde el constructor.
+jugadores = [
+    cls_Jugador("Ihann"),
+    cls_Jugador("Bollolo"),
+    cls_Jugador("Caballin"),
+    cls_Jugador("Aymara"),
+]
 
