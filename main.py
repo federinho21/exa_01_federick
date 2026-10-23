@@ -9,7 +9,7 @@ Goals........: Using stack class
 Professor....: Jorge Ruiz (york)
 Student......:
 ================================================================================================="""
-from Subrutinas import validar_expresion
+from Subrutinas import validar_expresion, repartir_cartas
 from cls_Jugador import cls_Jugador
 
 expresion = input("Ingrese una expresión matemática: ")
@@ -26,4 +26,6 @@ jugadores = [
     cls_Jugador("Caballin"),
     cls_Jugador("Aymara"),
 ]
+
+repartir_cartas(jugadores)
 

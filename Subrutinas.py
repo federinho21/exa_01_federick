@@ -28,11 +28,13 @@ def validar_expresion(expresion):
                 es_valida = False
                 break
 
-    # Las aperturas pendientes indican que faltaron cierres.
+
+    # Los psrentesis pedientes indican que faltaron cierres
     if not pila.isempty():
         es_valida = False
 
-    # Dejar la pila vacía incluso cuando la expresión sea incorrecta.
+
+    # se deja la pila vacia incluso cuando la expresion sea incorreta
     while not pila.isempty():
         pila.pop()
 
@@ -40,3 +42,22 @@ def validar_expresion(expresion):
         raise ValueError("La pila debe estar vacía al finalizar su uso.")
 
     return es_valida
+
+
+def repartir_cartas(jugadores):
+    if len(jugadores) != 4:
+        raise ValueError("se necesitan cuatro jugadores para repartir.")
+
+    for jugador in jugadores:
+        if not jugador.partida.isempty():
+            raise ValueError("las pilas deben estar vacias antes del reparto.")
+
+    disponibles = [carta for palo in baraja for carta in palo]
+
+    # reparto una carta por jugador en cada ronda.
+    while not all(jugador.partida.isfull() for jugador in jugadores):
+        for jugador in jugadores:
+            if not jugador.partida.isfull():
+                carta = random.choice(disponibles)
+                jugador.partida.push(carta)
+                disponibles.remove(carta)
