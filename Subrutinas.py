@@ -1,4 +1,5 @@
 import random
+from time import sleep
 from cls_Stack import cls_Stack
 # means of char
 # B = Bastos o pica
@@ -61,3 +62,47 @@ def repartir_cartas(jugadores):
                 carta = random.choice(disponibles)
                 jugador.partida.push(carta)
                 disponibles.remove(carta)
+
+
+def jugar(jugadores):
+    jugadas = [[] for jugador in jugadores]
+    ganador = None
+    corazones = []
+    ancho = max(len(jugador.nombre) for jugador in jugadores) + 4
+    print()
+    print("".join(f"{jugador.nombre:<{ancho}}" for jugador in jugadores))
+    primer_turno = True
+
+    while ganador is None and any(not j.partida.isempty() for j in jugadores):
+        for indice, jugador in enumerate(jugadores):
+            if jugador.partida.isempty():
+                continue
+
+            # espero entre turnos, sin retrasar el inicio ni el final.
+            if not primer_turno:
+                sleep(2)
+            primer_turno = False
+
+            carta = jugador.partida.pop()
+            jugadas[indice].append(carta)
+            print(" " * (ancho * indice) + carta, flush=True)
+
+            if carta == "QC":
+                ganador = jugador
+                corazones = [c for c in jugadas[indice] if c.endswith("C")]
+                break
+
+    if ganador is None:
+        print("no hubo ganador: se agotaron las cartas.")
+    else:
+        print(f"ganador: {ganador.nombre}")
+        print("corazones acumulados:", ", ".join(corazones))
+
+    # las cartas sobrantes se descartan; no cuentan como jugadas.
+    for jugador in jugadores:
+        while not jugador.partida.isempty():
+            jugador.partida.pop()
+        if not jugador.partida.isempty():
+            raise ValueError("las pilas deben quedar vacias al finalizar.")
+
+    return ganador, corazones
